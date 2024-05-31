@@ -1,8 +1,9 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
+import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import db from '@repo/db/client'
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -10,19 +11,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({
-      user,
-      account,
-    }: {
-      user: {
-        email: string
-        name: string
-      }
-      account: {
-        provider: 'google' | 'github'
-      }
-    }) {
-      console.log('hi signin')
+    async signIn({ user, account }) {
       if (!user || !user.email) {
         return false
       }
@@ -36,12 +25,12 @@ export const authOptions = {
         },
         create: {
           email: user.email,
-          name: user.name,
-          auth_type: account.provider === 'google' ? 'Google' : 'Github', // Use a prisma type here
+          name: user.name || '',
+          auth_type: account?.provider === 'google' ? 'Google' : 'Github', // Ensure account is not null
         },
         update: {
-          name: user.name,
-          auth_type: account.provider === 'google' ? 'Google' : 'Github', // Use a prisma type here
+          name: user.name || '',
+          auth_type: account?.provider === 'google' ? 'Google' : 'Github', // Ensure account is not null
         },
       })
 
@@ -50,3 +39,7 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET || 'secret',
 }
+
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
