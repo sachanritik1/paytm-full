@@ -1,13 +1,14 @@
-"use client";
+'use client'
 
 export const TextInput = ({
   placeholder,
   onChange,
   label,
 }: {
-  placeholder: string;
-  onChange: (value: string) => void;
-  label: string;
+  placeholder: string
+  // eslint-disable-next-line no-unused-vars
+  onChange: (value: string) => void
+  label: string
 }) => {
   return (
     <div className="pt-2">
@@ -22,5 +23,5 @@ export const TextInput = ({
         placeholder={placeholder}
       />
     </div>
-  );
-};
+  )
+}
